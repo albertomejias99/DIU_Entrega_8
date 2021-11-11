@@ -1,19 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mycompany.diu_entrega_8;
 
-/**
- *
- * @author alber
- */
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.highgui.HighGui;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+
 public class Frame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Frame
-     */
+    static {
+        nu.pattern.OpenCV.loadShared();
+    }
+
+    static {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    }
+
+    JFileChooser fc = new JFileChooser();
+    FileNameExtensionFilter filtro = null;
+    File fichero = null;
+
     public Frame() {
         initComponents();
     }
@@ -27,50 +46,56 @@ public class Frame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jDesktopPane1 = new javax.swing.JDesktopPane();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        escritorio = new javax.swing.JDesktopPane();
+        menuBar = new javax.swing.JMenuBar();
         ficheroMenu = new javax.swing.JMenu();
         abrirImagen = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        umbralizar = new javax.swing.JMenuItem();
+        guardar = new javax.swing.JMenuItem();
         opcionesMenu = new javax.swing.JMenu();
         ayuda = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         salir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1200, 800));
 
-        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
-        jDesktopPane1.setLayout(jDesktopPane1Layout);
-        jDesktopPane1Layout.setHorizontalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 587, Short.MAX_VALUE)
+        javax.swing.GroupLayout escritorioLayout = new javax.swing.GroupLayout(escritorio);
+        escritorio.setLayout(escritorioLayout);
+        escritorioLayout.setHorizontalGroup(
+            escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1041, Short.MAX_VALUE)
         );
-        jDesktopPane1Layout.setVerticalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 429, Short.MAX_VALUE)
+        escritorioLayout.setVerticalGroup(
+            escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 697, Short.MAX_VALUE)
         );
 
         ficheroMenu.setText("Ficheros");
 
         abrirImagen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         abrirImagen.setText("Abrir imagen");
-        ficheroMenu.add(abrirImagen);
-
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem1.setText("Umbralizar");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        abrirImagen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                abrirImagenActionPerformed(evt);
             }
         });
-        ficheroMenu.add(jMenuItem1);
+        ficheroMenu.add(abrirImagen);
 
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        jMenuItem2.setText("Guardar");
-        ficheroMenu.add(jMenuItem2);
+        umbralizar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        umbralizar.setText("Umbralizar");
+        umbralizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                umbralizarActionPerformed(evt);
+            }
+        });
+        ficheroMenu.add(umbralizar);
 
-        jMenuBar1.add(ficheroMenu);
+        guardar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        guardar.setText("Guardar");
+        ficheroMenu.add(guardar);
+
+        menuBar.add(ficheroMenu);
 
         opcionesMenu.setText("Opciones");
 
@@ -86,33 +111,112 @@ public class Frame extends javax.swing.JFrame {
 
         salir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         salir.setText("Salir");
+        salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirActionPerformed(evt);
+            }
+        });
         opcionesMenu.add(salir);
 
-        jMenuBar1.add(opcionesMenu);
+        menuBar.add(opcionesMenu);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1)
+            .addComponent(escritorio)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1)
+            .addComponent(escritorio)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void ayudaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ayudaActionPerformed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(rootPane, "Selecciona una imagen desde el menú 'Ficheros' para visualizarla.\nPosteriormente podrá umbralizar seleccionando el valor del umbral y guardar la imagen.", "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_ayudaActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void umbralizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_umbralizarActionPerformed
+        if (fichero != null) {
+            String input = JOptionPane.showInputDialog(rootPane, "Escribe el valor del umbral", "Umbralizar", JOptionPane.QUESTION_MESSAGE);
+            Mat imgOriginal = Imgcodecs.imread(fichero.getAbsolutePath());
+            try {
+                Mat imgUmbralizada = umbralizar(imgOriginal, Integer.parseInt(input));
+                BufferedImage imgUmb = (BufferedImage) HighGui.toBufferedImage(imgUmbralizada);
+                VentanaInterna ventanaUmbr = new VentanaInterna(imgUmb);
+                ventanaUmbr.setTitle(input);
+                ventanaUmbr.setLocation(new Point(this.getWidth() - ventanaUmbr.getWidth() - 10, (int) (Math.random() * (this.getHeight() - ventanaUmbr.getHeight()))));
+                escritorio.add(ventanaUmbr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(rootPane, "Debes introducir un número", "Input erróneo", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Debes abrir un fichero primero", "Error al umbralizar", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_umbralizarActionPerformed
+
+    private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
+        int op = JOptionPane.showConfirmDialog(rootPane, "¿Está seguro que quiere salir?", "Salir", JOptionPane.YES_NO_OPTION);
+        if (op == JOptionPane.YES_OPTION) {
+            setVisible(false);
+            dispose();
+        }
+    }//GEN-LAST:event_salirActionPerformed
+
+    private void abrirImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abrirImagenActionPerformed
+        filtro = new FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png");
+        fc.addChoosableFileFilter(filtro);
+        int op = fc.showOpenDialog(null);
+        if (op == JFileChooser.APPROVE_OPTION) {
+            fichero = fc.getSelectedFile();
+            cerrarVentanas();
+            try {
+                BufferedImage imagen = ImageIO.read(fichero);
+                VentanaInterna ventanaInterna = new VentanaInterna(imagen);
+                ventanaInterna.setTitle(fichero.getName());
+                ventanaInterna.setLocation(new Point(0,50));
+                escritorio.add(ventanaInterna);
+            } catch (IOException ex) {
+                Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_abrirImagenActionPerformed
+
+    private Mat umbralizar(Mat imagen_original, Integer umbral) {
+// crear dos imágenes en niveles de gris con el mismo
+// tamaño que la original
+        Mat imagenGris = new Mat(imagen_original.rows(),
+                imagen_original.cols(),
+                CvType.CV_8U);
+        Mat imagenUmbralizada = new Mat(imagen_original.rows(),
+                imagen_original.cols(),
+                CvType.CV_8U);
+// convierte a niveles de grises la imagen original
+        Imgproc.cvtColor(imagen_original,
+                imagenGris,
+                Imgproc.COLOR_BGR2GRAY);
+// umbraliza la imagen:
+// - píxeles con nivel de gris > umbral se ponen a 1
+// - píxeles con nivel de gris <= umbra se ponen a 0
+        Imgproc.threshold(imagenGris,
+                imagenUmbralizada,
+                umbral,
+                255,
+                Imgproc.THRESH_BINARY);
+// se devuelve la imagen umbralizada
+        return imagenUmbralizada;
+    }
+
+    private void cerrarVentanas() {
+        JInternalFrame[] internalFrames = escritorio.getAllFrames();
+        for (JInternalFrame internalFrame : internalFrames) {
+            internalFrame.dispose();
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -152,13 +256,14 @@ public class Frame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem abrirImagen;
     private javax.swing.JMenuItem ayuda;
+    private javax.swing.JDesktopPane escritorio;
     private javax.swing.JMenu ficheroMenu;
-    private javax.swing.JDesktopPane jDesktopPane1;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem guardar;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu opcionesMenu;
     private javax.swing.JMenuItem salir;
+    private javax.swing.JMenuItem umbralizar;
     // End of variables declaration//GEN-END:variables
+
 }
