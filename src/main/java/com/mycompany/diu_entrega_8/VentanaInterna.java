@@ -14,7 +14,7 @@ public class VentanaInterna extends javax.swing.JInternalFrame {
         this.setMaximizable(true);
         this.setIconifiable(true);
         this.setClosable(true);
-        this.setResizable(true);
+        this.setResizable(false);
         this.setVisible(true);
     }
 
@@ -25,7 +25,7 @@ public class VentanaInterna extends javax.swing.JInternalFrame {
         this.setMaximizable(true);
         this.setIconifiable(true);
         this.setClosable(true);
-        this.setResizable(true);
+        this.setResizable(false);
         this.setVisible(true);
     }
 

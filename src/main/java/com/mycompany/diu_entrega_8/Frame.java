@@ -2,7 +2,10 @@ package com.mycompany.diu_entrega_8;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -149,8 +152,12 @@ public class Frame extends javax.swing.JFrame {
                 BufferedImage imgUmb = (BufferedImage) HighGui.toBufferedImage(imgUmbralizada);
                 VentanaInterna ventanaUmbr = new VentanaInterna(imgUmb);
                 ventanaUmbr.setTitle(input);
-                ventanaUmbr.setLocation(new Point(this.getWidth() - ventanaUmbr.getWidth() - 10, (int) (Math.random() * (this.getHeight() - ventanaUmbr.getHeight()))));
+                ventanaUmbr.setLocation(new Point(this.getWidth() - ventanaUmbr.getWidth() - 20, (int) (Math.random() * (this.getHeight() - ventanaUmbr.getHeight() - 60))));
                 escritorio.add(ventanaUmbr);
+                try {
+                    ventanaUmbr.setSelected(true);
+                } catch (PropertyVetoException ex) {
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(rootPane, "Debes introducir un número", "Input erróneo", JOptionPane.ERROR_MESSAGE);
             }
@@ -178,9 +185,17 @@ public class Frame extends javax.swing.JFrame {
                 BufferedImage imagen = ImageIO.read(fichero);
                 VentanaInterna ventanaInterna = new VentanaInterna(imagen);
                 ventanaInterna.setTitle(fichero.getName());
-                ventanaInterna.setLocation(new Point(0,50));
+                ventanaInterna.setLocation(new Point(0, 50));
                 escritorio.add(ventanaInterna);
+                ventanaInterna.setSelected(true);
+                if (ventanaInterna.getWidth() > this.getWidth() || ventanaInterna.getHeight() > this.getHeight()) {
+                    this.setBounds(this.getLocation().x, this.getLocation().y,
+                            (ventanaInterna.getLocation().x + ventanaInterna.getSize().width + 50),
+                            (ventanaInterna.getLocation().y + ventanaInterna.getSize().height + 150));
+                }
             } catch (IOException ex) {
+                Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (PropertyVetoException ex) {
                 Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -232,25 +247,51 @@ public class Frame extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Frame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Frame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Frame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Frame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Frame.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Frame().setVisible(true);
+                Frame frame = new Frame();
+                frame.setVisible(true);
+                frame.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentResized(ComponentEvent e) {
+                        System.out.println("Resized to " + e.getComponent().getSize());
+                        JInternalFrame[] internalFrames = frame.escritorio.getAllFrames();
+                        Point aux = new Point(0, 0);
+                        for (JInternalFrame internalFrame : internalFrames) {
+                            Point botRight = new Point(internalFrame.getBounds().x + internalFrame.getBounds().width, internalFrame.getBounds().y + internalFrame.getBounds().height);
+                            if (botRight.x >= aux.x) {
+                                aux.x = botRight.x;
+                            }
+                            if (botRight.y >= aux.y) {
+                                aux.y = botRight.y;
+                            }
+                        }
+                        frame.setMinimumSize(new Dimension(aux.x+50, aux.y+100));
+                        System.out.println(aux.toString());
+                    }
+                });
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
