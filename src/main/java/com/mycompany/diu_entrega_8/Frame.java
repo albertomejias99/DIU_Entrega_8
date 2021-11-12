@@ -38,6 +38,7 @@ public class Frame extends javax.swing.JFrame {
 
     public Frame() {
         initComponents();
+        this.setTitle("Umbralizar imagen en escritorio - Jorge Marrero & Alberto Mejias");
     }
 
     /**
@@ -54,7 +55,6 @@ public class Frame extends javax.swing.JFrame {
         ficheroMenu = new javax.swing.JMenu();
         abrirImagen = new javax.swing.JMenuItem();
         umbralizar = new javax.swing.JMenuItem();
-        guardar = new javax.swing.JMenuItem();
         opcionesMenu = new javax.swing.JMenu();
         ayuda = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -93,10 +93,6 @@ public class Frame extends javax.swing.JFrame {
             }
         });
         ficheroMenu.add(umbralizar);
-
-        guardar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        guardar.setText("Guardar");
-        ficheroMenu.add(guardar);
 
         menuBar.add(ficheroMenu);
 
@@ -299,7 +295,6 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JMenuItem ayuda;
     private javax.swing.JDesktopPane escritorio;
     private javax.swing.JMenu ficheroMenu;
-    private javax.swing.JMenuItem guardar;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenu opcionesMenu;
