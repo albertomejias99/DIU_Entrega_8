@@ -269,7 +269,6 @@ public class Frame extends javax.swing.JFrame {
                 frame.addComponentListener(new ComponentAdapter() {
                     @Override
                     public void componentResized(ComponentEvent e) {
-                        System.out.println("Resized to " + e.getComponent().getSize());
                         JInternalFrame[] internalFrames = frame.escritorio.getAllFrames();
                         Point aux = new Point(0, 0);
                         for (JInternalFrame internalFrame : internalFrames) {
@@ -282,7 +281,6 @@ public class Frame extends javax.swing.JFrame {
                             }
                         }
                         frame.setMinimumSize(new Dimension(aux.x+50, aux.y+100));
-                        System.out.println(aux.toString());
                     }
                 });
             }
